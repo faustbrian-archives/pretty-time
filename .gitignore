@@ -6,3 +6,4 @@ composer.lock
 coverage.xml
 docs
 vendor
+.php_cs.cache

@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @coversNothing
  */
-class AnalysisTest extends TestCase
+final class AnalysisTest extends TestCase
 {
     use AnalysisTrait;
 
