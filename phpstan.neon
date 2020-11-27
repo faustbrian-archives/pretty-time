@@ -1,5 +1,10 @@
 parameters:
-    level: 8
+    level: 1
     paths:
         - src
     checkMissingIterableValueType: false
+    ignoreErrors:
+        - '#already#'
+        - '#empty#'
+        - '#mixed given#'
+        - '#with null as default#'
