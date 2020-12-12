@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Konceiver\PrettyTime;
 
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use InvalidArgumentException;
 
 final class PrettyTime
@@ -65,7 +63,7 @@ final class PrettyTime
                     ($parsed['microseconds'] / 1000) +
                     ($parsed['nanoseconds'] / 1e6);
 
-                $millisecondsDecimalDigits = Arr::get($options, 'millisecondsDecimalDigits', 0);
+                $millisecondsDecimalDigits = static::getValueFromArray($options, 'millisecondsDecimalDigits', 0);
 
                 $roundedMiliseconds = $millisecondsAndBelow >= 1 ?
                     round($millisecondsAndBelow) :
@@ -86,9 +84,9 @@ final class PrettyTime
             }
         } else {
             $seconds              = fmod($milliseconds / 1000, 60);
-            $secondsDecimalDigits = Arr::get($options, 'secondsDecimalDigits', 1);
+            $secondsDecimalDigits = static::getValueFromArray($options, 'secondsDecimalDigits', 1);
             $secondsFixed         = static::floorDecimals($seconds, $secondsDecimalDigits);
-            $secondsString        = Arr::get($options, 'keepDecimalsOnWholeSeconds')
+            $secondsString        = static::getValueFromArray($options, 'keepDecimalsOnWholeSeconds')
                 ? $secondsFixed
                 : preg_replace('/\.0+$/', '', $secondsFixed);
 
@@ -103,8 +101,8 @@ final class PrettyTime
             return $result[0];
         }
 
-        if (Arr::get($options, 'unitCount')) {
-            $separator = Arr::has($options, 'colonNotation') ? '' : ' ';
+        if (static::getValueFromArray($options, 'unitCount')) {
+            $separator = array_key_exists('colonNotation', $options) ? '' : ' ';
 
             return implode($separator, array_slice($result, 0, max($options['unitCount'], 1)));
         }
@@ -123,7 +121,7 @@ final class PrettyTime
     private static function add(array &$result, $options, $value, $long, $short, $valueString = null)
     {
         $a = count($result) === 0 || empty($options['colonNotation']);
-        $b = ($value === 0 || $value === 0.0 || $value === '0') && ! (Arr::get($options, 'colonNotation') && $short === 'm');
+        $b = ($value === 0 || $value === 0.0 || $value === '0') && ! (static::getValueFromArray($options, 'colonNotation') && $short === 'm');
 
         if ($a && $b) {
             return;
@@ -135,7 +133,7 @@ final class PrettyTime
         if (! empty($options['colonNotation'])) {
             $prefix      = count($result) > 0 ? ':' : '';
             $suffix      = '';
-            $wholeDigits = Str::contains($valueString, '.') ? strlen((string) explode('.', $valueString)[0]) : strlen((string) $valueString);
+            $wholeDigits = str_contains((string) $valueString, '.') ? strlen((string) explode('.', $valueString)[0]) : strlen((string) $valueString);
             $minLength   = count($result) > 0 ? 2 : 1;
             $valueString = str_repeat('0', max(0, $minLength - $wholeDigits)).$valueString;
         } else {
@@ -161,5 +159,13 @@ final class PrettyTime
             'microseconds' => fmod($roundTowardsZero($milliseconds * 1000), 1000),
             'nanoseconds'  => fmod($roundTowardsZero($milliseconds * 1e6), 1000),
         ];
+    }
+
+    private static function getValueFromArray(array $data, string $key, mixed $default = null): mixed {
+        if (! array_key_exists($key, $data)) {
+            return $default;
+        }
+
+        return $data[$key] ?? $default;
     }
 }
