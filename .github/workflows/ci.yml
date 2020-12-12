@@ -31,7 +31,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: "7.4"
+                  php-version: "8.0"
                   extensions: mbstring, dom, fileinfo, intl, gd, imagick, bcmath, soap, zip, sqlite, pcov
                   coverage: pcov
 
@@ -59,7 +59,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: "7.4"
+                  php-version: "8.0"
                   extensions: mbstring, dom, fileinfo, intl, gd, imagick, bcmath, soap, zip, sqlite, pcov
                   coverage: pcov
 
@@ -67,7 +67,7 @@ jobs:
               run: composer install --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist --optimize-autoloader
 
             - name: Run php-cs-fixer
-              run: ./vendor/bin/php-cs-fixer fix .
+              run: PHP_CS_FIXER_IGNORE_ENV=true ./vendor/bin/php-cs-fixer fix .
 
             - uses: stefanzweifel/git-auto-commit-action@v4
               with:
@@ -88,7 +88,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: "7.4"
+                  php-version: "8.0"
                   extensions: mbstring, dom, fileinfo, intl, gd, imagick, bcmath, soap, zip, sqlite, pcov
                   coverage: pcov
 
