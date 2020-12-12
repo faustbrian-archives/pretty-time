@@ -161,7 +161,8 @@ final class PrettyTime
         ];
     }
 
-    private static function getValueFromArray(array $data, string $key, mixed $default = null): mixed {
+    private static function getValueFromArray(array $data, string $key, mixed $default = null): mixed
+    {
         if (! array_key_exists($key, $data)) {
             return $default;
         }
